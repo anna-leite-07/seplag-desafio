@@ -6,5 +6,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class Acao extends Model
 {
-    //
+    protected $table = 'acoes';
+
+    protected $fillable = [
+        'programa_id',
+        'codigo_oficial',
+        'nome',
+    ];
+
+    // Uma ação pertence a um programa
+    public function programa()
+    {
+        return $this->belongsTo(
+            Programa::class,
+            'programa_id',
+            'id'
+        );
+    }
+
+    // Uma ação pode ter vários orçamentos
+    public function orcamentos()
+    {
+        return $this->hasMany(
+            Orcamento::class,
+            'acao_id',
+            'id'
+        );
+    }
 }
