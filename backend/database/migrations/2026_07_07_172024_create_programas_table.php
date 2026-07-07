@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('programas', function (Blueprint $table) {
             $table->id();
+
+            $table->integer('codigo_oficial')->unique();
+            $table->string('nome', 150);
+
             $table->timestamps();
         });
     }

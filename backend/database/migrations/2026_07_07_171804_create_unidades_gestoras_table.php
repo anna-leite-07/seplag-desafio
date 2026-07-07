@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('unidades_gestoras', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('orgao_id')
+                ->constrained('orgaos')->cascadeOnDelete();
+            $table->string('nome', 150);
+
             $table->timestamps();
         });
     }

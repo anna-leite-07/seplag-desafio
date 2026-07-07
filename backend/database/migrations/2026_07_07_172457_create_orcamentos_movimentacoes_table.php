@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('orcamentos_movimentacoes', function (Blueprint $table) {
             $table->id();
+
+
+            $table->foreignId('orcamento_id')
+                ->constrained('orcamentos')->cascadeOnDelete();
+
+            $table->enum('tipo', ['suplementacao', 'anulacao']);
+            $table->decimal('valor', 15, 2);
+            $table->date('data_movimentacao');
+
+
             $table->timestamps();
         });
     }

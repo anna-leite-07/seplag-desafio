@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('acoes', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('programa_id')
+                ->constrained('programas')->cascadeOnDelete();
+            $table->integer('codigo_oficial')->unique();
+            $table->string('nome', 150);
+
             $table->timestamps();
         });
     }

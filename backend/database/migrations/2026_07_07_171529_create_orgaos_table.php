@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('orgaos', function (Blueprint $table) {
             $table->id();
+
+            $table->string('sigla', 20)->unique();
+            $table->string('nome', 150);
+            $table->boolean('status')->default(true);
+
             $table->timestamps();
         });
     }

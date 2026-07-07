@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('fontes_recurso', function (Blueprint $table) {
             $table->id();
+            
+            $table->string('nome', 150);
+
             $table->timestamps();
         });
     }

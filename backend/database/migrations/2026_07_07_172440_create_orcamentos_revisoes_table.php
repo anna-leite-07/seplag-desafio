@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('orcamentos_revisoes', function (Blueprint $table) {
             $table->id();
+
+
+            $table->foreignId('orcamento_id')
+                ->constrained('orcamentos')->cascadeOnDelete();
+            
+            $table->foreignId('user_id')
+                ->constrained('users')->cascadeOnDelete();
+
+            $table->text('observacao')->nullable();
+            $table->timestamp('data_revisao')->useCurrent();
+
+
             $table->timestamps();
         });
     }

@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('subfuncoes', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('funcao_id')
+                ->constrained('funcoes')->cascadeOnDelete();
+            $table->string('nome', 150);
+
             $table->timestamps();
         });
     }

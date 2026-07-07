@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('naturezas_despesa', function (Blueprint $table) {
             $table->id();
+            
+            $table->string('nome', 150);
+
             $table->timestamps();
         });
     }

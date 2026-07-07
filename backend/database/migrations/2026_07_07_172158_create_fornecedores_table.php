@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('fornecedores', function (Blueprint $table) {
             $table->id();
+            
+            $table->string('nome', 150);
+
             $table->timestamps();
         });
     }
