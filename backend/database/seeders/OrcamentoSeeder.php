@@ -87,12 +87,10 @@ class OrcamentoSeeder extends Seeder
         $temAnulacao = fake()->boolean(30);
 
         $suplementacao = $temSuplementacao
-            ? fake()->randomFloat(2, 0, $dotacaoInicial * 0.20)
-            : 0.00;
+            ? fake()->randomFloat(2, 0, $dotacaoInicial * 0.20) : 0.00;
 
         $anulacao = $temAnulacao
-            ? fake()->randomFloat(2, 0, $dotacaoInicial * 0.15)
-            : 0.00;
+            ? fake()->randomFloat(2, 0, $dotacaoInicial * 0.15) : 0.00;
 
         $dotacaoAtualizada = $dotacaoInicial + $suplementacao - $anulacao;
 

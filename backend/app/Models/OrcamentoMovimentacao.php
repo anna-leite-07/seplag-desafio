@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrcamentoMovimentacao extends Model
 {
+    use HasFactory;
     protected $table = 'orcamentos_movimentacoes';
 
     protected $fillable = [

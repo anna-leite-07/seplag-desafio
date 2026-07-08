@@ -3,22 +3,21 @@
 namespace Database\Factories;
 
 use App\Models\UnidadeGestora;
+use App\Models\Orgao; // Importando o Model relacionado
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<UnidadeGestora>
- */
 class UnidadeGestoraFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = UnidadeGestora::class;
+    
     public function definition(): array
     {
+        $nome = fake()->company(); 
+        $orgaoId = Orgao::query()->inRandomOrder()->value('id');
+
         return [
-            //
+            'nome' => $nome,
+            'orgao_id' => $orgaoId,
         ];
     }
 }
