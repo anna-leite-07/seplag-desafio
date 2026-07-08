@@ -2,16 +2,21 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Programa;
 use Illuminate\Database\Seeder;
+use App\Support\LeitorJson;
 
 class ProgramaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $dados = LeitorJson::load();
+        
+        foreach ($dados['programas'] as $programa) {
+            Programa::create([
+                'codigo_oficial' => $programa['codigo'],
+                'nome' => $programa['nome'],
+            ]);
+        }
     }
 }

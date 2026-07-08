@@ -2,16 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\NaturezaDespesa;
 use Illuminate\Database\Seeder;
+use App\Support\LeitorJson;
 
 class NaturezaDespesaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $dados = LeitorJson::load();
+        
+        foreach ($dados['naturezas_despesa'] as $natureza) {
+            NaturezaDespesa::create([
+                'nome' => $natureza,
+            ]);
+        }
     }
 }

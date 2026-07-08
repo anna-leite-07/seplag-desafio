@@ -2,16 +2,21 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Funcao;
 use Illuminate\Database\Seeder;
+use App\Support\LeitorJson;
 
 class FuncaoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $dados = LeitorJson::load();
+        
+        foreach ($dados['funcoes'] as $funcao) {
+            Funcao::create([
+                'codigo_oficial' => $funcao['codigo'],
+                'nome' => $funcao['nome'],
+            ]);
+        }
     }
 }

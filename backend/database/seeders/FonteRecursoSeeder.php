@@ -2,16 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\FonteRecurso;
 use Illuminate\Database\Seeder;
+use App\Support\LeitorJson;
 
 class FonteRecursoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
+        $dados = LeitorJson::load();
+
+        foreach ($dados['fontes_recurso'] as $fonte) {
+            FonteRecurso::create([
+                'nome' => $fonte,
+            ]);
+        }
     }
 }
