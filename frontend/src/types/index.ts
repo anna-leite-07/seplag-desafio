@@ -1,3 +1,16 @@
+export interface Dashboard {
+  total_orgaos: number;
+  total_contratos: number;
+  orcamento_total: number;
+  empenhado: number;
+  liquidado: number;
+  pago: number;
+  saldo: number;
+  percentual_execucao: number;
+  ultima_atualizacao: string | null;
+}
+
+
 export interface Orgao {
   id: number;
   sigla: string;

@@ -12,6 +12,7 @@ export default function AppRoutes() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/orcamentos" element={<Orcamentos />} />
         <Route path="/orcamentos/:id" element={<OrcamentoDetalhe />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </BrowserRouter>
   );

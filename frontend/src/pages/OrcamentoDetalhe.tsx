@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import api from '../services/api';
-import type { Orcamento } from '../types';
 
+import type { Orcamento } from '../types';
 import CampoInfo from '../components/CampoInfo';
 
 export default function OrcamentoDetalhe() {
@@ -30,7 +29,7 @@ export default function OrcamentoDetalhe() {
   if (carregando) return <div className="p-6 text-gray-900">Carregando...</div>;
   if (erro) return <div className="p-6 text-red-400">{erro}</div>;
   if (!orcamento) return <div className="p-6 text-gray-900">Orçamento não encontrado.</div>;
-  
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 p-6">
       <h1 className="text-2xl font-bold mb-4">
