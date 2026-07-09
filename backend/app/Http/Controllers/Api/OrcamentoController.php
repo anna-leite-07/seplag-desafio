@@ -104,9 +104,9 @@ class OrcamentoController extends Controller
                 'naturezaDespesa:id,nome',
                 'fonteRecurso:id,nome',
 
-                'movimentacoes:id,orcamento_id,tipo,valor,data_movimentacao',
                 'contratos:id,orcamento_id,fornecedor_id,numero,objeto,valor,status,data_inicio,data_fim',
-                'revisoes:id,orcamento_id,user_id,observacao,data_revisao',
+                'orcamentoMovimentacoes:id,orcamento_id,tipo,valor,data_movimentacao',
+                'orcamentoRevisoes:id,orcamento_id,user_id,observacao,data_revisao',
             ])
             ->findOrFail($id);
 
