@@ -117,6 +117,7 @@ class OrcamentoController extends Controller
                 'fonteRecurso:id,nome',
 
                 'contratos:id,orcamento_id,fornecedor_id,numero,objeto,valor,status,data_inicio,data_fim',
+                'contratos.fornecedor:id,nome',
                 'orcamentoMovimentacoes:id,orcamento_id,tipo,valor,data_movimentacao',
                 'orcamentoRevisoes:id,orcamento_id,user_id,observacao,data_revisao',
             ])

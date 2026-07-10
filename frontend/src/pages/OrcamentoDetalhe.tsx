@@ -63,6 +63,7 @@ export default function OrcamentoDetalhe() {
                   <tr>
                     <th className="text-left p-3">Número</th>
                     <th className="text-left p-3">Objeto</th>
+                    <th className="text-left p-3">Fornecedor</th>
                     <th className="text-left p-3">Status</th>
                     <th className="text-right p-3">Valor</th>
                   </tr>
@@ -72,6 +73,7 @@ export default function OrcamentoDetalhe() {
                     <tr key={c.id} className="border-t">
                       <td className="p-3">{c.numero}</td>
                       <td className="p-3">{c.objeto}</td>
+                      <td className="p-3">{c.fornecedor.nome}</td>
                       <td className="p-3">{c.status}</td>
                       <td className="p-3 text-right">
                         {Number(c.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
