@@ -39,7 +39,7 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 p-6">
+    <div className="bg-gray-50 text-gray-900 p-6">
       <h1 className="text-2xl font-bold mb-6">Painel de Execução Orçamentária</h1>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">

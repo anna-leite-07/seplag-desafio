@@ -62,7 +62,7 @@ export default function Orcamentos() {
     }
 
     catch { setErro('Não foi possível carregar os orçamentos.'); }
-    finally {setCarregando(false);}
+    finally { setCarregando(false); }
   }
 
   useEffect(() => { buscar(); }, [pagina, ordenacao, gatilhoBusca]);

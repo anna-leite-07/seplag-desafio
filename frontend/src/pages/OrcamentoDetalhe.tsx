@@ -31,7 +31,7 @@ export default function OrcamentoDetalhe() {
   if (!orcamento) return <div className="p-6 text-gray-900">Orçamento não encontrado.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 p-6">
+    <div className="bg-gray-50 text-gray-900 p-6">
       <h1 className="text-2xl font-bold mb-4"> Orçamento #{orcamento.id} — {orcamento.ano} </h1>
 
       <div className="bg-gray-50 text-gray-900 p-6">

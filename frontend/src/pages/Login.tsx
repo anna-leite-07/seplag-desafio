@@ -27,7 +27,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+    <div className="bg-gray-50 flex items-center justify-center p-6">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow w-full max-w-sm space-y-4">
         <h1 className="text-xl font-bold text-gray-900"> Painel de Execução Orçamentária </h1>
 
