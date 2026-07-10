@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Orcamento extends Model
 {
@@ -31,6 +32,25 @@ class Orcamento extends Model
             'valor_liquidado' => 'decimal:2',
             'valor_pago' => 'decimal:2',
         ];
+    }
+
+    protected function dotacaoAtualizada(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->dotacao_inicial
+                + ($this->total_suplementacoes ?? 0) - ($this->total_anulacoes ?? 0),
+        );
+    }
+
+    protected function percentualExecucao(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $atualizada = $this->dotacaoAtualizada;
+                return $atualizada > 0
+                    ? round(($this->valor_empenhado / $atualizada) * 100, 2) : 0;
+            },
+        );
     }
 
     // Um orçamento pertence a uma unidade gestora

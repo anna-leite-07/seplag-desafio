@@ -46,9 +46,11 @@ export default function OrcamentoDetalhe() {
         <hr className="border-zinc-700 my-2" />
 
         <CampoInfo label="Dotação Inicial" valor={orcamento.dotacao_inicial} tipo="moeda" />
+        <CampoInfo label="Dotação Atualizada" valor={orcamento.dotacao_atualizada} tipo="moeda" />
         <CampoInfo label="Empenhado" valor={orcamento.valor_empenhado} tipo="moeda" />
         <CampoInfo label="Liquidado" valor={orcamento.valor_liquidado} tipo="moeda" />
         <CampoInfo label="Pago" valor={orcamento.valor_pago} tipo="moeda" />
+        <CampoInfo label="Percentual de Execução" valor={orcamento.percentual_execucao != null ? `${orcamento.percentual_execucao}%` : undefined} />
       </div>
 
       <div className="mt-6">

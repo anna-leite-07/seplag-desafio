@@ -111,7 +111,7 @@ export default function Orcamentos() {
               <th className="text-left p-3">Ano</th>
               <th className="text-left p-3">Órgão</th>
               <th className="text-left p-3">Programa</th>
-              <th className="text-right p-3">Dotação</th>
+              <th className="text-right p-3">Dotação Atual</th>
               <th className="text-right p-3">Empenhado</th>
             </tr>
           </thead>
@@ -123,7 +123,9 @@ export default function Orcamentos() {
                   <td className="p-3">{o.ano}</td>
                   <td className="p-3">{o.unidade_gestora?.orgao.sigla}</td>
                   <td className="p-3">{o.acao?.programa.nome}</td>
-                  <td className="p-3 text-right">{Number(o.dotacao_inicial).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                  <td className="p-3 text-right">
+                    {Number(o.dotacao_atualizada ?? o.dotacao_inicial).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                  </td>
                   <td className="p-3 text-right">{Number(o.valor_empenhado).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                 </tr>
               ))

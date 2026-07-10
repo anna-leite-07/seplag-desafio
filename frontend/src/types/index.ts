@@ -101,6 +101,8 @@ export interface Orcamento {
   fonte_recurso?: FonteRecurso;
   ano: number;
   dotacao_inicial: string;
+  dotacao_atualizada?: string;
+  percentual_execucao?: number;
   valor_empenhado: string;
   valor_liquidado: string;
   valor_pago: string;

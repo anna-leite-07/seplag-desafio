@@ -25,6 +25,12 @@ class OrcamentoController extends Controller
                 'valor_liquidado',
                 'valor_pago',
             ])
+            ->withSum(['orcamentoMovimentacoes as total_suplementacoes' => function ($q) {
+                $q->where('tipo', 'suplementacao');
+            }], 'valor')
+            ->withSum(['orcamentoMovimentacoes as total_anulacoes' => function ($q) {
+                $q->where('tipo', 'anulacao');
+            }], 'valor')
             ->with([
                 'unidadeGestora:id,orgao_id',
                 'unidadeGestora.orgao:id,sigla,nome',
@@ -93,6 +99,12 @@ class OrcamentoController extends Controller
                 'valor_liquidado',
                 'valor_pago',
             ])
+            ->withSum(['orcamentoMovimentacoes as total_suplementacoes' => function ($q) {
+                $q->where('tipo', 'suplementacao');
+            }], 'valor')
+            ->withSum(['orcamentoMovimentacoes as total_anulacoes' => function ($q) {
+                $q->where('tipo', 'anulacao');
+            }], 'valor')
             ->with([
                 'unidadeGestora:id,orgao_id',
                 'unidadeGestora.orgao:id,sigla,nome',
