@@ -83,6 +83,7 @@ export interface OrcamentoRevisao {
   id: number;
   orcamento_id: number;
   user_id: number;
+  user?: Usuario;
   observacao: string | null;
   data_revisao: string;
 }
@@ -106,9 +107,9 @@ export interface Orcamento {
   valor_empenhado: string;
   valor_liquidado: string;
   valor_pago: string;
-  movimentacoes?: OrcamentoMovimentacao[];
+  orcamento_movimentacoes?: OrcamentoMovimentacao[];
   contratos?: Contrato[];
-  revisoes?: OrcamentoRevisao[];
+  orcamento_revisoes?: OrcamentoRevisao[];
 }
 
 export interface Usuario {

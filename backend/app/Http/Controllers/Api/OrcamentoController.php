@@ -120,6 +120,7 @@ class OrcamentoController extends Controller
                 'contratos.fornecedor:id,nome',
                 'orcamentoMovimentacoes:id,orcamento_id,tipo,valor,data_movimentacao',
                 'orcamentoRevisoes:id,orcamento_id,user_id,observacao,data_revisao',
+                'orcamentoRevisoes.user:id,name',
             ])
             ->findOrFail($id);
 

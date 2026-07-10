@@ -48,7 +48,7 @@ class DashboardController extends Controller
             'pago' => round($pago, 2),
             'saldo' => round($saldo, 2),
             'percentual_execucao' => $percentual,
-            'ultima_atualizacao' => now(),
+            'ultima_atualizacao' => Orcamento::max('updated_at'),
         ]);
     }
 
