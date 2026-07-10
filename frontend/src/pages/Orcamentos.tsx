@@ -6,6 +6,9 @@ import type { Orcamento } from '../types';
 
 export default function Orcamentos() {
   const [gatilhoBusca, setGatilhoBusca] = useState(0);
+  const [campoOrdenacao, setCampoOrdenacao] = useState('id');
+  const [percentualMin, setPercentualMin] = useState('');
+  const [percentualMax, setPercentualMax] = useState('');
 
   // Estados
   const [carregando, setCarregando] = useState(true);
@@ -28,8 +31,10 @@ export default function Orcamentos() {
     setCarregando(true);
 
     try {
-      const params: any = {page: pagina, direction: ordenacao};
-
+      const params: any = {page: pagina, sort_by: campoOrdenacao, direction: ordenacao};
+      if (percentualMin) params.percentual_min = percentualMin;
+      if (percentualMax) params.percentual_max = percentualMax;
+      
       if (pesquisa.trim()) {
         switch (campoFiltro) {
           case 'orgao':
@@ -65,7 +70,7 @@ export default function Orcamentos() {
     finally { setCarregando(false); }
   }
 
-  useEffect(() => { buscar(); }, [pagina, ordenacao, gatilhoBusca]);
+  useEffect(() => { buscar(); }, [pagina, ordenacao, campoOrdenacao, gatilhoBusca]);
 
   if (carregando) return <div className="p-6">Carregando...</div>;
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;
@@ -92,8 +97,24 @@ export default function Orcamentos() {
       {/* Total de registros encontrados e ordenação */}
       <div className="flex justify-between items-center mb-4">
         <span>{total} registros encontrados</span>
+
+        <div>
+          <input type="number" value={percentualMin} onChange={(e) => setPercentualMin(e.target.value)} placeholder="% mínimo" className="border rounded px-3 py-2 w-28" />
+          <input type="number" value={percentualMax} onChange={(e) => setPercentualMax(e.target.value)} placeholder="% máximo" className="border rounded px-3 py-2 w-28" />
+          <button onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }} className="bg-blue-600 text-white rounded px-4">Filtrar</button>
+        </div>
+
         <div>
           <span className="mr-2">Ordenação</span>
+
+          <select value={campoOrdenacao} onChange={(e) => setCampoOrdenacao(e.target.value)} className="border rounded px-3 py-2 mr-2">
+            <option value="id">Id</option>
+            <option value="dotacao_atualizada">Dotação Atualizada</option>
+            <option value="ano">Ano</option>
+            <option value="valor_empenhado">Empenhado</option>
+            <option value="valor_liquidado">Liquidado</option>
+            <option value="valor_pago">Pago</option>
+          </select>
 
           <select value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)} className="border rounded px-3 py-2">
             <option value="desc">Decrescente</option>

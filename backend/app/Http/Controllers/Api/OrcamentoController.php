@@ -43,6 +43,8 @@ class OrcamentoController extends Controller
                 'fonteRecurso:id,nome',
         ]);
 
+
+        // FILTROS de pesquisa
         if ($request->filled('orgao')) {
             $sigla = $request->string('orgao');
             $query->whereHas('unidadeGestora.orgao', function ($q) use ($sigla) {
@@ -67,19 +69,49 @@ class OrcamentoController extends Controller
         if ($request->filled('ano')) {
             $query->where('ano', $request->integer('ano'));
         }
-
         
+        // FILTROS de percentual
+        if ($request->filled('percentual_min')) {
+            $query->havingRaw(
+                '(valor_empenhado / NULLIF(' . $this->sqlDotacaoAtualizada() . ', 0)) * 100 >= ?',
+                [$request->float('percentual_min')]
+            );
+        }
 
+        if ($request->filled('percentual_max')) {
+            $query->havingRaw(
+                '(valor_empenhado / NULLIF(' . $this->sqlDotacaoAtualizada() . ', 0)) * 100 <= ?',
+                [$request->float('percentual_max')]
+            );
+        }
+
+        // FILTROS de ordenação
+        $ordenaveis = [
+            'ano' => 'ano',
+            'valor_empenhado' => 'valor_empenhado',
+            'valor_liquidado' => 'valor_liquidado',
+            'valor_pago' => 'valor_pago',
+        ];
+        
+        $campoOrdenacao = $request->input('sort_by');
+        $direcao = $request->input('direction') === 'asc' ? 'asc' : 'desc';
+
+        if ($campoOrdenacao === 'dotacao_atualizada') {
+            $query->orderByRaw(
+                '(' . $this->sqlDotacaoAtualizada() . ') ' . $direcao
+            );
+        } elseif (isset($ordenaveis[$campoOrdenacao])) {
+            $query->orderBy($ordenaveis[$campoOrdenacao], $direcao);
+        } else {
+            $query->orderBy('id', $direcao);
+        }
+
+
+        // LIMITE e paginação
         $porPagina = $request->integer('per_page', 15);
         $pagina = $request->integer('page', 1);
+        $orcamentos = $query->paginate(perPage: $porPagina, page: $pagina);
 
-        $orcamentos = $query
-            ->orderBy('id')
-            ->paginate(
-                perPage: $porPagina,
-                page: $pagina
-        );
-        
         return response()->json($orcamentos);
     }
 
@@ -127,6 +159,11 @@ class OrcamentoController extends Controller
         return response()->json($orcamento);
     }
 
+    private function sqlDotacaoAtualizada(): string
+    {
+        return '(dotacao_inicial + COALESCE(total_suplementacoes,0) - COALESCE(total_anulacoes,0))';
+    }
+    
     public function revisao(Request $request, int $id): JsonResponse
     {
         $orcamento = Orcamento::findOrFail($id);
