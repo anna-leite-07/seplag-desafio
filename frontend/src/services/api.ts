@@ -14,4 +14,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Intercepta toda resposta de erro
+api.interceptors.response.use(
+  (response) => response, // se deu certo, passa direto
+  (error) => {
+    // Se der 401 (não autorizado)
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
