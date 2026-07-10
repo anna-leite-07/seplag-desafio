@@ -24,6 +24,8 @@ class Orcamento extends Model
         'valor_pago',
     ];
 
+    protected $appends = ['dotacao_atualizada', 'percentual_execucao'];
+    
     protected function casts(): array
     {
         return [
