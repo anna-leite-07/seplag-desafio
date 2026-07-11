@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import api from '../services/api';
-import type { Orcamento } from '../types';
+import type { Orcamento, PaginatedResponse } from '../types';
 
 export default function Orcamentos() {
   const [gatilhoBusca, setGatilhoBusca] = useState(0);
@@ -82,7 +82,7 @@ export default function Orcamentos() {
       if (percentualMin) params.percentual_min = percentualMin;
       if (percentualMax) params.percentual_max = percentualMax;
 
-      const resposta = await api.get('/orcamentos', { params });
+      const resposta = await api.get<PaginatedResponse<Orcamento>>('/orcamentos', { params });
 
       setOrcamentos(resposta.data.data);
       setPagina(resposta.data.current_page);
