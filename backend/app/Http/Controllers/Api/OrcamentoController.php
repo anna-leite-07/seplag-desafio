@@ -100,7 +100,11 @@ class OrcamentoController extends Controller
             $query->orderByRaw(
                 '(' . $this->sqlDotacaoAtualizada() . ') ' . $direcao
             );
-        } elseif (isset($ordenaveis[$campoOrdenacao])) {
+        } elseif ($campoOrdenacao === 'percentual_execucao') {
+            $query->orderByRaw(
+                '(valor_empenhado / NULLIF(' . $this->sqlDotacaoAtualizada() . ', 0)) ' . $direcao
+            );
+        }elseif (isset($ordenaveis[$campoOrdenacao])) {
             $query->orderBy($ordenaveis[$campoOrdenacao], $direcao);
         } else {
             $query->orderBy('id', $direcao);
