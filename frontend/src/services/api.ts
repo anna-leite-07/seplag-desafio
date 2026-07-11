@@ -19,7 +19,7 @@ api.interceptors.response.use(
   (response) => response, // se deu certo, passa direto
   (error) => {
     // Se der 401 (não autorizado)
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !error.config.url.includes('/auth/login')) {
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
       window.location.href = '/login';
