@@ -13,17 +13,17 @@ class OrcamentoController extends Controller
     {
         $query = Orcamento::query()
             ->select([
-                'id',
-                'unidade_gestora_id',
-                'acao_id',
-                'subfuncao_id',
-                'natureza_despesa_id',
-                'fonte_recurso_id',
-                'ano',
-                'dotacao_inicial',
-                'valor_empenhado',
-                'valor_liquidado',
-                'valor_pago',
+                'orcamentos.id',
+                'orcamentos.unidade_gestora_id',
+                'orcamentos.acao_id',
+                'orcamentos.subfuncao_id',
+                'orcamentos.natureza_despesa_id',
+                'orcamentos.fonte_recurso_id',
+                'orcamentos.ano',
+                'orcamentos.dotacao_inicial',
+                'orcamentos.valor_empenhado',
+                'orcamentos.valor_liquidado',
+                'orcamentos.valor_pago',
             ])
             ->withSum(['orcamentoMovimentacoes as total_suplementacoes' => function ($q) {
                 $q->where('tipo', 'suplementacao');
@@ -86,30 +86,38 @@ class OrcamentoController extends Controller
         }
 
         // FILTROS de ordenação
-        $ordenaveis = [
-            'ano' => 'ano',
-            'valor_empenhado' => 'valor_empenhado',
-            'valor_liquidado' => 'valor_liquidado',
-            'valor_pago' => 'valor_pago',
+        $colunasOrdenacao = [
+            'id' => 'orcamentos.id',
+            'ano' => 'orcamentos.ano',
+            'valor_empenhado' => 'orcamentos.valor_empenhado',
+            'valor_liquidado' => 'orcamentos.valor_liquidado',
+            'valor_pago' => 'orcamentos.valor_pago',
+            'orgao' => 'org_ord.sigla',
+            'programa' => 'prog_ord.nome',
+            'acao' => 'acao_ord.nome',
         ];
-        
+
         $campoOrdenacao = $request->input('sort_by');
         $direcao = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+        $camposComJoin = ['orgao', 'programa', 'acao'];
 
-        if ($campoOrdenacao === 'dotacao_atualizada') {
-            $query->orderByRaw(
-                '(' . $this->sqlDotacaoAtualizada() . ') ' . $direcao
-            );
-        } elseif ($campoOrdenacao === 'percentual_execucao') {
-            $query->orderByRaw(
-                '(valor_empenhado / NULLIF(' . $this->sqlDotacaoAtualizada() . ', 0)) ' . $direcao
-            );
-        }elseif (isset($ordenaveis[$campoOrdenacao])) {
-            $query->orderBy($ordenaveis[$campoOrdenacao], $direcao);
-        } else {
-            $query->orderBy('id', $direcao);
+        if (in_array($campoOrdenacao, $camposComJoin)) {
+            $query->join('unidades_gestoras as ug_ord', 'ug_ord.id', '=', 'orcamentos.unidade_gestora_id')
+                ->join('orgaos as org_ord', 'org_ord.id', '=', 'ug_ord.orgao_id')
+                ->join('acoes as acao_ord', 'acao_ord.id', '=', 'orcamentos.acao_id')
+                ->join('programas as prog_ord', 'prog_ord.id', '=', 'acao_ord.programa_id')
+                ->select('orcamentos.*');
         }
 
+        if ($campoOrdenacao === 'dotacao_atualizada') {
+            $query->orderByRaw('(' . $this->sqlDotacaoAtualizada() . ') ' . $direcao);
+        } elseif ($campoOrdenacao === 'percentual_execucao') {
+            $query->orderByRaw('(valor_empenhado / NULLIF(' . $this->sqlDotacaoAtualizada() . ', 0)) ' . $direcao);
+        } elseif (isset($colunasOrdenacao[$campoOrdenacao])) {
+            $query->orderBy($colunasOrdenacao[$campoOrdenacao], $direcao);
+        } else {
+            $query->orderBy('orcamentos.id', $direcao);
+        }
 
         // LIMITE e paginação
         $porPagina = $request->integer('per_page', 15);
