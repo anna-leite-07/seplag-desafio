@@ -3,8 +3,31 @@ import { useNavigate } from 'react-router-dom';
 
 import api from '../services/api';
 import type { Orcamento, PaginatedResponse } from '../types';
+import { formatarMoeda } from '../utils/formatters';
 
 export default function Orcamentos() {
+  // Opções de ordenação e filtro
+  const OPCOES_ORDENACAO = [
+    { value: 'id', label: 'Id' },
+    { value: 'ano', label: 'Ano' },
+    { value: 'orgao', label: 'Órgão'},
+    { value: 'programa', label: 'Programa' },
+    { value: 'acao', label: 'Ação' },
+    { value: 'dotacao_atualizada', label: 'Dotação Atualizada' },
+    { value: 'valor_empenhado', label: 'Empenhado' },
+    { value: 'valor_liquidado', label: 'Liquidado' },
+    { value: 'valor_pago', label: 'Pago' },
+    { value: 'percentual_execucao', label: '% Execução' },
+  ] as const;
+  
+  const OPCOES_FILTRO_CAMPO = [
+    { value: 'orgao', label: 'Órgão' },
+    { value: 'programa', label: 'Programa' },
+    { value: 'acao', label: 'Ação' },
+    { value: 'ano', label: 'Ano' },
+  ] as const;
+
+  // Estado que força a execução de useEffect
   const [gatilhoBusca, setGatilhoBusca] = useState(0);
   const [campoOrdenacao, setCampoOrdenacao] = useState('id');
   const [percentualMin, setPercentualMin] = useState('');
@@ -122,10 +145,9 @@ export default function Orcamentos() {
             onChange={(e) => setCampoNovoFiltro(e.target.value)}
             className="border rounded px-3 py-2"
           >
-            <option value="orgao">Órgão</option>
-            <option value="programa">Programa</option>
-            <option value="acao">Ação</option>
-            <option value="ano">Ano</option>
+            {OPCOES_FILTRO_CAMPO.map((opcao) => (
+              <option key={opcao.value} value={opcao.value}>{opcao.label}</option>
+            ))}
           </select>
           <input
             value={valorNovoFiltro}
@@ -201,16 +223,9 @@ export default function Orcamentos() {
               onChange={(e) => setCampoOrdenacao(e.target.value)}
               className="border rounded px-3 py-2"
             >
-              <option value="id">Id</option>
-              <option value="ano">Ano</option>
-              <option value="orgao">Órgão</option>
-              <option value="programa">Programa</option>
-              <option value="acao">Ação</option>
-              <option value="dotacao_atualizada">Dotação Atualizada</option>
-              <option value="valor_empenhado">Empenhado</option>
-              <option value="valor_liquidado">Liquidado</option>
-              <option value="valor_pago">Pago</option>
-              <option value="percentual_execucao">% Execução</option>
+              {OPCOES_ORDENACAO.map((opcao) => (
+                <option key={opcao.value} value={opcao.value}>{opcao.label}</option>
+              ))}
             </select>
 
             <select
@@ -254,14 +269,14 @@ export default function Orcamentos() {
                   <td className="p-3">{o.acao?.programa.nome}</td>
                   <td className="p-3">{o.acao?.nome}</td>
                   <td className="p-3 text-right">
-                    {Number(o.dotacao_atualizada ?? o.dotacao_inicial).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    {formatarMoeda(o.dotacao_atualizada ?? o.dotacao_inicial)}
                   </td>
-                  <td className="p-3 text-right">{Number(o.valor_empenhado).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                  <td className="p-3 text-right">{formatarMoeda(o.valor_empenhado)}</td>
                   <td className="p-3 text-right">
-                    {Number(o.valor_liquidado).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    {formatarMoeda(o.valor_liquidado)}
                   </td>
                   <td className="p-3 text-right">
-                    {Number(o.valor_pago).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    {formatarMoeda(o.valor_pago)}
                   </td>
                   <td className="p-3 text-right">
                     {o.percentual_execucao ? `${o.percentual_execucao}%` : 'Informação não disponível'}

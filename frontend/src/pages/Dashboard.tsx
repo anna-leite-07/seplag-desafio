@@ -4,6 +4,8 @@ import api from '../services/api';
 import type { Dashboard, GraficosData } from '../types';
 import Card from '../components/Card';
 
+import { formatarMoeda, formatarData, limitarPercentual } from '../utils/formatters';
+
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
@@ -14,9 +16,6 @@ export default function Dashboard() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
-  function formatarMoeda(valor: number) {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(valor));
-  }
   useEffect(() => {
     async function buscarTudo() {
       try {
@@ -39,11 +38,6 @@ export default function Dashboard() {
   if (carregando) return <div className="p-6">Carregando...</div>;
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;
   if (!dados) return <div className="p-6">Sem dados.</div>;
-
-  // percentual máximo limitado à 100%
-  const percentual = Math.min(
-      Math.max(dados.percentual_execucao, 0), 100
-  );
 
   return (
     <div className="bg-gray-50 text-gray-900 p-6">
@@ -72,7 +66,7 @@ export default function Dashboard() {
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
               className="bg-blue-600 h-3 rounded-full"
-              style={{ width: `${percentual}%` }}
+              style={{ width: `${limitarPercentual(dados.percentual_execucao)}%` }}
             />
           </div>
         </div>
@@ -80,7 +74,7 @@ export default function Dashboard() {
 
       {dados.ultima_atualizacao && (
         <p className="text-sm text-gray-500">
-          Última atualização: {new Date(dados.ultima_atualizacao).toLocaleString('pt-BR')}
+          Última atualização: {formatarData(dados.ultima_atualizacao)}
         </p>
       )}
 

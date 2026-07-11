@@ -5,6 +5,8 @@ import api from '../services/api';
 import type { Orcamento } from '../types';
 import CampoInfo from '../components/CampoInfo';
 
+import { formatarData, formatarMoeda } from '../utils/formatters';
+
 export default function OrcamentoDetalhe() {
   const { id } = useParams();
   const [orcamento, setOrcamento] = useState<Orcamento | null>(null);
@@ -128,7 +130,7 @@ export default function OrcamentoDetalhe() {
                 {orcamento.orcamento_revisoes.map((r) => (
                   <tr key={r.id} className="border-t">
                     <td className="p-3">
-                      {new Date(r.data_revisao).toLocaleString('pt-BR')}
+                      {formatarData(r.data_revisao)}
                     </td>
                     <td className="p-3">{r.user?.name ?? 'Informação não disponível'}</td>
                     <td className="p-3">{r.observacao ?? 'Sem observação'}</td>
@@ -163,7 +165,7 @@ export default function OrcamentoDetalhe() {
                       <td className="p-3">{c.fornecedor?.nome ?? 'Informação não disponível'}</td>
                       <td className="p-3">{c.status}</td>
                       <td className="p-3 text-right">
-                        {Number(c.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                        {formatarMoeda(c.valor)}
                       </td>
                     </tr>
                   ))}
