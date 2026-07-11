@@ -24,7 +24,7 @@ class Orcamento extends Model
         'valor_pago',
     ];
 
-    protected $appends = ['dotacao_atualizada', 'percentual_execucao'];
+    protected $appends = ['dotacao_atualizada', 'percentual_execucao', 'situacao', 'alerta'];
     
     protected function casts(): array
     {
@@ -51,6 +51,34 @@ class Orcamento extends Model
                 $atualizada = $this->dotacaoAtualizada;
                 return $atualizada > 0
                     ? round(($this->valor_empenhado / $atualizada) * 100, 2) : 0;
+            },
+        );
+    }
+
+    protected function situacao(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->valor_pago > $this->valor_liquidado) return 'pago_maior_que_liquidado';
+                if ($this->valor_liquidado > $this->valor_empenhado) return 'liquidado_maior_que_empenhado';
+                if ($this->valor_empenhado > $this->dotacaoAtualizada) return 'saldo_negativo';
+                if ($this->valor_empenhado == 0) return 'sem_execucao';
+                return 'ok';
+            },
+        );
+    }
+
+    protected function alerta(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return match ($this->situacao) {
+                    'pago_maior_que_liquidado' => 'Atenção: valor pago é maior que o valor liquidado.',
+                    'liquidado_maior_que_empenhado' => 'Atenção: valor liquidado é maior que o valor empenhado.',
+                    'saldo_negativo' => 'Atenção: valor empenhado excede a dotação atualizada.',
+                    'sem_execucao' => 'Atenção: Orçamento sem nenhuma execução registrada.',
+                    default => null,
+                };
             },
         );
     }
