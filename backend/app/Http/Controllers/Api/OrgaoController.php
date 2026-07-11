@@ -20,6 +20,8 @@ class OrgaoController extends Controller
                 'status',
         ]);
 
+
+        // FILTROS de pesquisa
         if ($request->filled('nome')) {
             $query->where('nome', 'like', "%{$request->nome}%");
         }
@@ -32,15 +34,28 @@ class OrgaoController extends Controller
             $query->where('status', $request->boolean('status'));
         }
         
+
+        // FILTROS de ordenação
+        $ordenaveis = [
+            'sigla' => 'sigla',
+            'nome' => 'nome',
+            'status' => 'status',
+        ];
+        
+        $campoOrdenacao = $request->input('sort_by');
+        $direcao = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+
+        if (isset($ordenaveis[$campoOrdenacao])) {
+            $query->orderBy($ordenaveis[$campoOrdenacao], $direcao);
+        } else {
+            $query->orderBy('id', $direcao);
+        }
+
+
+        // LIMITE e paginação
         $porPagina = $request->integer('per_page', 10);
         $pagina = $request->integer('page', 1);
-
-        $orgaos = $query
-            ->orderBy('sigla')
-            ->paginate(
-                perPage: $porPagina,
-                page: $pagina
-        );
+        $orgaos = $query->paginate(perPage: $porPagina, page: $pagina);
 
         return response()->json($orgaos);
     }

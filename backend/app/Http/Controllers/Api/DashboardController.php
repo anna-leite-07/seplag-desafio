@@ -15,27 +15,29 @@ class DashboardController extends Controller
     //
     public function index(Request $request): JsonResponse
     {
+        // CALCULAR total de órgãos e contratos
         $totalOrgaos = Orgao::count();
         $totalContratos = Contrato::count();
 
+        // CALCULAR total de dotação inicial, suplementações e anulações
         $dotacaoInicial = Orcamento::sum('dotacao_inicial');
-
         $suplementacoes = OrcamentoMovimentacao::query()
             ->where('tipo', 'suplementacao')
             ->sum('valor');
-
         $anulacoes = OrcamentoMovimentacao::query()
             ->where('tipo', 'anulacao')
             ->sum('valor');
 
+        // CALCULAR total de dotação atualizada
         $orcamentoTotal = $dotacaoInicial + $suplementacoes - $anulacoes;
 
+        // CALCULAR total de empenhado, liquidado e pago
         $empenhado = Orcamento::sum('valor_empenhado');
         $liquidado = Orcamento::sum('valor_liquidado');
         $pago = Orcamento::sum('valor_pago');
 
+        // CALCULAR total de saldo e percentual de execução
         $saldo = $orcamentoTotal - $empenhado;
-
         $percentual = $orcamentoTotal > 0
             ? round(($empenhado / $orcamentoTotal) * 100, 2) : 0;
 

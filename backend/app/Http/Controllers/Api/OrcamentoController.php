@@ -94,7 +94,7 @@ class OrcamentoController extends Controller
         ];
         
         $campoOrdenacao = $request->input('sort_by');
-        $direcao = $request->input('direction') === 'asc' ? 'asc' : 'desc';
+        $direcao = $request->input('direction') === 'desc' ? 'desc' : 'asc';
 
         if ($campoOrdenacao === 'dotacao_atualizada') {
             $query->orderByRaw(

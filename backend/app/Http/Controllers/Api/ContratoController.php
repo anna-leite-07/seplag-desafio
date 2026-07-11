@@ -29,6 +29,8 @@ class ContratoController extends Controller
                 'orcamento.unidadeGestora.orgao:id,sigla,nome',
         ]);
 
+
+        // FILTROS de pesquisa
         if ($request->filled('status')) {
             $query->where('status', strtoupper($request->string('status')));
         }
@@ -45,15 +47,31 @@ class ContratoController extends Controller
             });
         }
 
+
+        // FILTROS de ordenação
+        $ordenaveis = [
+            'numero' => 'numero',
+            'objeto' => 'objeto',
+            'valor' => 'valor',
+            'status' => 'status',
+            'data_inicio' => 'data_inicio',
+            'data_fim' => 'data_fim',
+        ];
+        
+        $campoOrdenacao = $request->input('sort_by');
+        $direcao = $request->input('direction') === 'desc' ? 'desc' : 'asc';
+
+        if (isset($ordenaveis[$campoOrdenacao])) {
+            $query->orderBy($ordenaveis[$campoOrdenacao], $direcao);
+        } else {
+            $query->orderBy('id', $direcao);
+        }
+
+
+        // LIMITE e paginação
         $porPagina = $request->integer('per_page', 15);
         $pagina = $request->integer('page', 1);
-
-        $contratos = $query
-            ->orderBy('numero')
-            ->paginate(
-                perPage: $porPagina,
-                page: $pagina
-        );
+        $contratos = $query->paginate(perPage: $porPagina, page: $pagina);
         
         return response()->json($contratos);
     }
