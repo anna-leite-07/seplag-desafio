@@ -33,17 +33,23 @@ export default function Login() {
 
         <div>
           <label className="block text-sm text-gray-600 mb-1">E-mail</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border rounded px-3 py-2 w-full" required />
+          <input name="email" type="email" value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('campo-senha')?.focus(); } }}
+            className="border rounded px-3 py-2 w-full" required />
         </div>
 
         <div>
           <label className="block text-sm text-gray-600 mb-1">Senha</label>
-          <input type="password" value={senha} onChange={(e) => setSenha(e.target.value)} className="border rounded px-3 py-2 w-full" required />
+          <input id="campo-senha" type="password" value={senha} onChange={(e) => setSenha(e.target.value)} className="border rounded px-3 py-2 w-full" required />
         </div>
 
         {erro && <p className="text-red-600 text-sm">{erro}</p>}
 
-        <button type="submit" disabled={enviando} className="bg-blue-600 text-white rounded px-4 py-2 w-full disabled:opacity-50">
+        <button type="submit" disabled={enviando} className="bg-blue-600 text-white rounded px-4 py-2 w-full disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed">
           {enviando ? 'Entrando...' : 'Entrar'}
         </button>
       </form>
