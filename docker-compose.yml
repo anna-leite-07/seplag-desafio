@@ -1,0 +1,47 @@
+services:
+  banco:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: seplag
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: seplag
+      MYSQL_PASSWORD: seplag
+    ports:
+      - "3307:3306"
+    volumes:
+      - dados_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: banco
+      DB_PORT: 3306
+      DB_DATABASE: seplag
+      DB_USERNAME: seplag
+      DB_PASSWORD: seplag
+    depends_on:
+      banco:
+        condition: service_healthy
+    command: >
+      sh -c "php artisan migrate:fresh --seed --force && cd public && php -S 0.0.0.0:8000 ../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  dados_mysql:
