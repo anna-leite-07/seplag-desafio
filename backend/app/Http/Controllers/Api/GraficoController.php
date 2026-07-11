@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contrato;
-use App\Models\Orcamento;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class GraficoController extends Controller
@@ -31,8 +31,7 @@ class GraficoController extends Controller
     {
         $dotacaoAtualizada = $this->sqlDotacaoAtualizada();
 
-        return Orcamento::query()
-            ->from('orcamentos as o')
+        return DB::table('orcamentos as o')
             ->join('unidades_gestoras as ug', 'ug.id', '=', 'o.unidade_gestora_id')
             ->join('orgaos as org', 'org.id', '=', 'ug.orgao_id')
             ->selectRaw("
@@ -53,8 +52,7 @@ class GraficoController extends Controller
     {
         $dotacaoAtualizada = $this->sqlDotacaoAtualizada();
 
-        return Orcamento::query()
-            ->from('orcamentos as o')
+        return DB::table('orcamentos as o')
             ->join('acoes as a', 'a.id', '=', 'o.acao_id')
             ->join('programas as p', 'p.id', '=', 'a.programa_id')
             ->selectRaw("
@@ -73,8 +71,7 @@ class GraficoController extends Controller
 
     private function empenhadoXPago(): array
     {
-        return Orcamento::query()
-            ->from('orcamentos as o')
+        return DB::table('orcamentos as o')
             ->join('unidades_gestoras as ug', 'ug.id', '=', 'o.unidade_gestora_id')
             ->join('orgaos as org', 'org.id', '=', 'ug.orgao_id')
             ->selectRaw("
