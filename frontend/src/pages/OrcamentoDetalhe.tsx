@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
 
-import type { Orcamento } from '../types';
+import type { Contrato, Orcamento, OrcamentoRevisao } from '../types';
 import CampoInfo from '../components/CampoInfo';
 
 import { formatarData, formatarMoeda } from '../utils/formatters';
+import Table from '../components/Table';
 
 export default function OrcamentoDetalhe() {
   const { id } = useParams();
@@ -117,60 +118,34 @@ export default function OrcamentoDetalhe() {
       {orcamento.orcamento_revisoes && orcamento.orcamento_revisoes.length > 0 && (
         <div className="mt-6">
           <h2 className="text-lg font-semibold mb-2">Histórico de Revisões</h2>
-          <div className="overflow-x-auto rounded shadow">
-            <table className="min-w-full bg-white">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="text-left p-3">Data</th>
-                  <th className="text-left p-3">Analista</th>
-                  <th className="text-left p-3">Observação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orcamento.orcamento_revisoes.map((r) => (
-                  <tr key={r.id} className="border-t">
-                    <td className="p-3">
-                      {formatarData(r.data_revisao)}
-                    </td>
-                    <td className="p-3">{r.user?.name ?? 'Informação não disponível'}</td>
-                    <td className="p-3">{r.observacao ?? 'Sem observação'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table<OrcamentoRevisao> dados={orcamento.orcamento_revisoes} chave={(r) => r.id}
+            colunas={[
+              { cabecalho: 'Data', render: (r) => formatarData(r.data_revisao) },
+              { cabecalho: 'Analista', render: (r) => r.user?.name ?? 'Informação não disponível' },
+              { cabecalho: 'Observação', render: (r) => r.observacao ?? 'Sem observação' },
+            ]}
+          />
         </div>
       )}
+      
       {/* Contratos */}
       <div className="mt-6">
         {orcamento.contratos && orcamento.contratos.length > 0 ? (
           <div className="mt-6">
             <h2 className="text-lg font-semibold mb-2">Contratos Vinculados</h2>
             <div className="overflow-x-auto rounded shadow">
-              <table className="min-w-full bg-white">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="text-left p-3">Número</th>
-                    <th className="text-left p-3">Objeto</th>
-                    <th className="text-left p-3">Fornecedor</th>
-                    <th className="text-left p-3">Status</th>
-                    <th className="text-right p-3">Valor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orcamento.contratos.map((c) => (
-                    <tr key={c.id} className="border-t">
-                      <td className="p-3">{c.numero}</td>
-                      <td className="p-3">{c.objeto}</td>
-                      <td className="p-3">{c.fornecedor?.nome ?? 'Informação não disponível'}</td>
-                      <td className="p-3">{c.status}</td>
-                      <td className="p-3 text-right">
-                        {formatarMoeda(c.valor)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <Table<Contrato> dados={orcamento.contratos} chave={(c) => c.id}
+                colunas={[
+                  { cabecalho: 'Número', render: (c) => c.numero },
+                  { cabecalho: 'Objeto', render: (c) => c.objeto },
+                  { cabecalho: 'Fornecedor', render: (c) => c.fornecedor?.nome ?? 'Informação não disponível' },
+                  { cabecalho: 'Status', render: (c) => c.status },
+                  {
+                    cabecalho: 'Valor', alinhamento: 'right',
+                    render: (c) => formatarMoeda(Number(c.valor)),
+                  },
+                ]}
+              />
             </div>
           </div>
         ) : (

@@ -41,4 +41,6 @@ export interface Orcamento {
   orcamento_movimentacoes?: OrcamentoMovimentacao[];
   contratos?: Contrato[];
   orcamento_revisoes?: OrcamentoRevisao[];
+  situacao: string;
+  alerta: string | null;
 }

@@ -80,6 +80,7 @@ export default function Dashboard() {
 
       {graficos && (
         <>
+          {/* Execução por Órgão */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">
             <h2 className="font-semibold mb-4">Execução por Órgão</h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -95,6 +96,7 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
 
+          {/* Empenhado x Pago (Top 10 Órgãos) */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">
             <h2 className="font-semibold mb-4">Empenhado x Pago (Top 10 Órgãos)</h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -109,7 +111,8 @@ export default function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-
+          
+          {/* Top 10 maiores contratos */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">
             <h2 className="font-semibold mb-4">Top 10 Maiores Contratos</h2>
             <ul className="divide-y">
@@ -121,7 +124,8 @@ export default function Dashboard() {
               ))}
             </ul>
           </div>
-
+          
+          {/* Execução por programa (Top 10) */}
           <div className="bg-white p-4 rounded-lg shadow mb-6">
             <h2 className="font-semibold mb-4">Execução por Programa (Top 10)</h2>
             <ResponsiveContainer width="100%" height={300}>

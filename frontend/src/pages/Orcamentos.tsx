@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import type { Orcamento, PaginatedResponse } from '../types';
 import { formatarMoeda } from '../utils/formatters';
+import Table from '../components/Table';
 
 export default function Orcamentos() {
   // Opções de ordenação e filtro
   const OPCOES_ORDENACAO = [
     { value: 'id', label: 'Id' },
     { value: 'ano', label: 'Ano' },
-    { value: 'orgao', label: 'Órgão'},
+    { value: 'orgao', label: 'Órgão' },
     { value: 'programa', label: 'Programa' },
     { value: 'acao', label: 'Ação' },
     { value: 'dotacao_atualizada', label: 'Dotação Atualizada' },
@@ -19,7 +20,7 @@ export default function Orcamentos() {
     { value: 'valor_pago', label: 'Pago' },
     { value: 'percentual_execucao', label: '% Execução' },
   ] as const;
-  
+
   const OPCOES_FILTRO_CAMPO = [
     { value: 'orgao', label: 'Órgão' },
     { value: 'programa', label: 'Programa' },
@@ -45,7 +46,7 @@ export default function Orcamentos() {
     acao?: string;
     ano?: string;
   }
-  
+
   const [ordenacao, setOrdenacao] = useState('desc');
   const [filtrosAtivos, setFiltrosAtivos] = useState<FiltrosAtivos>({});
   const [campoNovoFiltro, setCampoNovoFiltro] = useState('orgao');
@@ -90,7 +91,7 @@ export default function Orcamentos() {
     };
     return rotulos[campo] ?? campo;
   }
-  
+
   async function buscar() {
     setCarregando(true);
 
@@ -240,59 +241,47 @@ export default function Orcamentos() {
         </div>
       </div>
 
-      
 
       {/* Tabela de orçamentos */}
-      <div className="overflow-x-auto rounded shadow">
-        <table className="min-w-full">
-          {/* Cabeçalho da tabela */}
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="text-left p-3">Ano</th>
-              <th className="text-left p-3">Órgão</th>
-              <th className="text-left p-3">Programa</th>
-              <th className="text-left p-3">Ação</th>
-              <th className="text-right p-3">Dotação Atual</th>
-              <th className="text-right p-3">Empenhado</th>
-              <th className="text-right p-3">Liquidado</th>
-              <th className="text-right p-3">Pago</th>
-              <th className="text-right p-3">% Execução</th>
-            </tr>
-          </thead>
+      <Table<Orcamento> dados={orcamentos} chave={(o) => o.id} onRowClick={(o) => navigate(`/orcamentos/${o.id}`)}
+        tituloLinha={(o) => o.alerta ?? undefined} classeLinha={(o) => (o.situacao && o.situacao !== 'ok' ? 'bg-red-300' : '')}
+        colunas={[
+          { cabecalho: 'ID', render: (o) => o.id },
+          { cabecalho: 'Ano', render: (o) => o.ano },
+          { cabecalho: 'Órgão', render: (o) => o.unidade_gestora?.orgao.sigla },
+          { cabecalho: 'Programa', render: (o) => o.acao?.programa.nome },
+          { cabecalho: 'Ação', render: (o) => o.acao?.nome },
+          {
+            cabecalho: 'Dotação Atual', alinhamento: 'right',
+            render: (o) => formatarMoeda(Number(o.dotacao_atualizada ?? o.dotacao_inicial)),
+          },
+          {
+            cabecalho: 'Empenhado', alinhamento: 'right',
+            render: (o) => formatarMoeda(Number(o.valor_empenhado)),
+          },
+          {
+            cabecalho: 'Liquidado', alinhamento: 'right',
+            render: (o) => formatarMoeda(Number(o.valor_liquidado)),
+          },
+          {
+            cabecalho: 'Pago', alinhamento: 'right',
+            render: (o) => formatarMoeda(Number(o.valor_pago)),
+          },
+          {
+            cabecalho: '% Execução', alinhamento: 'right',
+            render: (o) =>
+              o.percentual_execucao != null
+                ? `${o.percentual_execucao}%` : 'Informação não disponível',
+          },
+        ]}
+      />
 
-          <tbody>
-            { // Cria linha para cada orçamento
-              orcamentos.map(o => (
-                <tr key={o.id} onClick={() => navigate(`/orcamentos/${o.id}`)} className="cursor-pointer hover:bg-gray-100">
-                  <td className="p-3">{o.ano}</td>
-                  <td className="p-3">{o.unidade_gestora?.orgao.sigla}</td>
-                  <td className="p-3">{o.acao?.programa.nome}</td>
-                  <td className="p-3">{o.acao?.nome}</td>
-                  <td className="p-3 text-right">
-                    {formatarMoeda(o.dotacao_atualizada ?? o.dotacao_inicial)}
-                  </td>
-                  <td className="p-3 text-right">{formatarMoeda(o.valor_empenhado)}</td>
-                  <td className="p-3 text-right">
-                    {formatarMoeda(o.valor_liquidado)}
-                  </td>
-                  <td className="p-3 text-right">
-                    {formatarMoeda(o.valor_pago)}
-                  </td>
-                  <td className="p-3 text-right">
-                    {o.percentual_execucao ? `${o.percentual_execucao}%` : 'Informação não disponível'}
-                  </td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
 
       {/* Navegação de páginas */}
       <div className="flex justify-between mt-5">
-        <button disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>← Anterior</button>
+        <button disabled={pagina === 1} onClick={() => setPagina(pagina - 1)} className={`cursor-pointer ${pagina === 1 ? 'invisible' : ''}`}>← Anterior</button>
         <span>Página {pagina} de {ultimaPagina}</span>
-        <button disabled={pagina === ultimaPagina} onClick={() => setPagina(pagina + 1)}>Próxima →</button>
+        <button disabled={pagina === ultimaPagina} onClick={() => setPagina(pagina + 1)} className={`cursor-pointer ${pagina === ultimaPagina ? 'invisible' : ''}`}>Próxima →</button>
       </div>
 
     </div>
