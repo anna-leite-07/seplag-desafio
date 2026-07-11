@@ -19,6 +19,7 @@ RUN composer install --no-interaction --optimize-autoloader
 
 RUN cp .env.example .env
 RUN php artisan key:generate --force
+RUN php artisan jwt:secret --force
 
 EXPOSE 8000
 
