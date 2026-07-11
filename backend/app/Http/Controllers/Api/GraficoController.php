@@ -66,6 +66,7 @@ class GraficoController extends Controller
             ")
             ->groupBy('p.id', 'p.nome')
             ->orderByDesc('dotacao_atualizada')
+            ->limit(10)
             ->get()
             ->toArray();
     }
