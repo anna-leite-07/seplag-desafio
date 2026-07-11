@@ -81,8 +81,12 @@ export default function Orcamentos() {
       <h1 className="text-2xl font-bold mb-6">Orçamentos</h1>
 
       {/* Filtros de pesquisa */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <select value={campoFiltro} onChange={(e) => setCampoFiltro(e.target.value)} className="border rounded px-3 py-2">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-4">
+        <select
+          value={campoFiltro}
+          onChange={(e) => setCampoFiltro(e.target.value)}
+          className="border rounded px-3 py-2"
+        >
           <option value="qualquer">Qualquer</option>
           <option value="orgao">Órgão</option>
           <option value="programa">Programa</option>
@@ -90,24 +94,59 @@ export default function Orcamentos() {
           <option value="ano">Ano</option>
         </select>
 
-        <input value={pesquisa} onChange={(e) => setPesquisa(e.target.value)} placeholder="Pesquisar..." className="border rounded px-3 py-2 flex-1" />
-        <button onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }} className="bg-blue-600 text-white rounded px-4">Pesquisar</button>
+        <input
+          value={pesquisa}
+          onChange={(e) => setPesquisa(e.target.value)}
+          placeholder="Pesquisar..."
+          className="border rounded px-3 py-2 flex-1 min-w-0"
+        />
+
+        <button
+          onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }}
+          className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
+        >
+          Pesquisar
+        </button>
       </div>
 
-      {/* Total de registros encontrados e ordenação */}
-      <div className="flex justify-between items-center mb-4">
+      {/* Filtro de percentual */}
+      <div className="flex flex-col sm:flex-row flex-wrap sm:items-center gap-3 mb-4">
+        <span className="sm:mr-2">Execução</span>
+
+        <input
+          type="number"
+          value={percentualMin}
+          onChange={(e) => setPercentualMin(e.target.value)}
+          placeholder="% mín."
+          className="border rounded px-3 py-2 w-full sm:w-28"
+        />
+        <input
+          type="number"
+          value={percentualMax}
+          onChange={(e) => setPercentualMax(e.target.value)}
+          placeholder="% máx."
+          className="border rounded px-3 py-2 w-full sm:w-28"
+        />
+        <button
+          onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }}
+          className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
+        >
+          Filtrar
+        </button>
+      </div>
+
+      {/* Total + Ordenação */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
         <span>{total} registros encontrados</span>
 
-        <div>
-          <input type="number" value={percentualMin} onChange={(e) => setPercentualMin(e.target.value)} placeholder="% mínimo" className="border rounded px-3 py-2 w-28" />
-          <input type="number" value={percentualMax} onChange={(e) => setPercentualMax(e.target.value)} placeholder="% máximo" className="border rounded px-3 py-2 w-28" />
-          <button onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }} className="bg-blue-600 text-white rounded px-4">Filtrar</button>
-        </div>
+        <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+          <span className="sm:mr-2">Ordenação</span>
 
-        <div>
-          <span className="mr-2">Ordenação</span>
-
-          <select value={campoOrdenacao} onChange={(e) => setCampoOrdenacao(e.target.value)} className="border rounded px-3 py-2 mr-2">
+          <select
+            value={campoOrdenacao}
+            onChange={(e) => setCampoOrdenacao(e.target.value)}
+            className="border rounded px-3 py-2"
+          >
             <option value="id">Id</option>
             <option value="dotacao_atualizada">Dotação Atualizada</option>
             <option value="ano">Ano</option>
@@ -116,7 +155,11 @@ export default function Orcamentos() {
             <option value="valor_pago">Pago</option>
           </select>
 
-          <select value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)} className="border rounded px-3 py-2">
+          <select
+            value={ordenacao}
+            onChange={(e) => setOrdenacao(e.target.value)}
+            className="border rounded px-3 py-2"
+          >
             <option value="desc">Decrescente</option>
             <option value="asc">Crescente</option>
           </select>
@@ -132,8 +175,10 @@ export default function Orcamentos() {
               <th className="text-left p-3">Ano</th>
               <th className="text-left p-3">Órgão</th>
               <th className="text-left p-3">Programa</th>
+              <th className="text-left p-3">Ação</th>
               <th className="text-right p-3">Dotação Atual</th>
               <th className="text-right p-3">Empenhado</th>
+              <th className="text-right p-3">% Execução</th>
             </tr>
           </thead>
 
@@ -144,10 +189,14 @@ export default function Orcamentos() {
                   <td className="p-3">{o.ano}</td>
                   <td className="p-3">{o.unidade_gestora?.orgao.sigla}</td>
                   <td className="p-3">{o.acao?.programa.nome}</td>
+                  <td className="p-3">{o.acao?.nome}</td>
                   <td className="p-3 text-right">
                     {Number(o.dotacao_atualizada ?? o.dotacao_inicial).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                   </td>
                   <td className="p-3 text-right">{Number(o.valor_empenhado).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                  <td className="p-3 text-right">
+                    {o.percentual_execucao != null ? `${o.percentual_execucao}%` : 'Informação não disponível'}
+                  </td>
                 </tr>
               ))
             }

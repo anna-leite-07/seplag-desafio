@@ -49,7 +49,7 @@ export default function Dashboard() {
     <div className="bg-gray-50 text-gray-900 p-6">
       <h1 className="text-2xl font-bold mb-6">Painel de Execução Orçamentária</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <Card titulo="Órgãos" valor={dados.total_orgaos} />
         <Card titulo="Contratos" valor={dados.total_contratos} />
         <Card titulo="Orçamento Total" valor={dados.orcamento_total} tipo='moeda' />
@@ -58,7 +58,7 @@ export default function Dashboard() {
 
       <div className="bg-white p-4 rounded-lg shadow mb-6">
         <h2 className="font-semibold mb-2">Execução</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card titulo="Empenhado" valor={dados.empenhado} tipo='moeda' />
           <Card titulo="Liquidado" valor={dados.liquidado} tipo='moeda' />
           <Card titulo="Pago" valor={dados.pago} tipo='moeda' />
@@ -129,7 +129,7 @@ export default function Dashboard() {
           </div>
 
           <div className="bg-white p-4 rounded-lg shadow mb-6">
-            <h2 className="font-semibold mb-4">Execução por Programa</h2>
+            <h2 className="font-semibold mb-4">Execução por Programa (Top 10)</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={graficos.execucao_por_programa}>
                 <CartesianGrid strokeDasharray="3 3" />
