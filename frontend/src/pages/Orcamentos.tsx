@@ -33,6 +33,7 @@ export default function Orcamentos() {
   const [campoOrdenacao, setCampoOrdenacao] = useState('id');
   const [percentualMin, setPercentualMin] = useState('');
   const [percentualMax, setPercentualMax] = useState('');
+  const [itensPorPagina, setItensPorPagina] = useState(15);
 
   // Estados
   const [carregando, setCarregando] = useState(true);
@@ -51,7 +52,7 @@ export default function Orcamentos() {
   const [filtrosAtivos, setFiltrosAtivos] = useState<FiltrosAtivos>({});
   const [campoNovoFiltro, setCampoNovoFiltro] = useState('orgao');
   const [valorNovoFiltro, setValorNovoFiltro] = useState('');
-  const [painelAberto, setPainelAberto] = useState(true); // aberto por padrão em telas maiores
+  const [painelAberto, setPainelAberto] = useState(() => window.innerWidth >= 640);
 
   function adicionarFiltro() {
     if (!valorNovoFiltro.trim()) return;
@@ -98,6 +99,7 @@ export default function Orcamentos() {
     try {
       const params: any = {
         page: pagina,
+        per_page: itensPorPagina,
         sort_by: campoOrdenacao,
         direction: ordenacao,
         ...filtrosAtivos, // espalha todos os filtros ativos como parâmetros
@@ -119,7 +121,7 @@ export default function Orcamentos() {
     }
   }
 
-  useEffect(() => { buscar(); }, [pagina, ordenacao, campoOrdenacao, gatilhoBusca]);
+  useEffect(() => { buscar(); }, [pagina, ordenacao, campoOrdenacao, itensPorPagina, gatilhoBusca]);
 
   if (carregando) return <div className="p-6">Carregando...</div>;
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;
@@ -129,118 +131,142 @@ export default function Orcamentos() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Orçamentos</h1>
 
-      {/* Toggle do painel — some em telas maiores, aparece em mobile */}
-      <button
-        onClick={() => setPainelAberto(!painelAberto)}
-        className="sm:hidden flex items-center gap-1 mb-3 text-blue-600 font-medium cursor-pointer"
-      >
-        Filtros
-        <span className={`transition-transform ${painelAberto ? 'rotate-180' : ''}`}>▾</span>
-      </button>
 
-      {/* Painel de filtros — sempre visível em sm+, controlado por painelAberto em mobile */}
-      <div className={`${painelAberto ? 'block' : 'hidden'} sm:block space-y-4 mb-3`}>
-        <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-4">
-          <select
-            value={campoNovoFiltro}
-            onChange={(e) => setCampoNovoFiltro(e.target.value)}
-            className="border rounded px-3 py-2"
-          >
-            {OPCOES_FILTRO_CAMPO.map((opcao) => (
-              <option key={opcao.value} value={opcao.value}>{opcao.label}</option>
-            ))}
-          </select>
-          <input
-            value={valorNovoFiltro}
-            onChange={(e) => setValorNovoFiltro(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && adicionarFiltro()}
-            placeholder="Valor do filtro..."
-            className="border rounded px-3 py-2 flex-1 min-w-0"
-          />
-          <button
-            onClick={adicionarFiltro}
-            className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
-          >
-            Adicionar Filtro
-          </button>
+      {/* Painel de Filtros */}
+      <div className="bg-blue-50 mb-4">
+        {/* Título toggle */}
+        <button
+          onClick={() => setPainelAberto(!painelAberto)}
+          className="sm:hidden w-full flex items-center justify-between gap-1 bg-blue-300 text-blue-900 font-medium cursor-pointer px-4 py-2"
+        >
+          Filtros
+          <span className={`transition-transform ${painelAberto ? 'rotate-180' : ''}`}>▾</span>
+        </button>
+
+        <div className="hidden sm:block w-full bg-blue-300 text-blue-900 font-medium px-4 py-2">
+          Filtros
         </div>
 
-        {/* Badges dos filtros ativos */}
-        {Object.keys(filtrosAtivos).length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {(Object.entries(filtrosAtivos) as [keyof FiltrosAtivos, string][]).map(([campo, valor]) => (
-              <span
-                key={campo}
-                className="bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 flex items-center gap-2"
-              >
-                {rotuloCampo(campo)}: {valor}
-                <button
-                  onClick={() => removerFiltro(campo)}
-                  className="cursor-pointer font-bold hover:text-blue-900"
-                  aria-label={`Remover filtro de ${campo}`}
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Filtro de percentual */}
-        <div className="flex flex-col sm:flex-row flex-wrap sm:items-center gap-3 mb-4">
-          <span className="sm:mr-2">Execução</span>
-
-          <input
-            type="number"
-            value={percentualMin}
-            onChange={(e) => setPercentualMin(e.target.value)}
-            placeholder="% mín."
-            className="border rounded px-3 py-2 w-full sm:w-28"
-          />
-          <input
-            type="number"
-            value={percentualMax}
-            onChange={(e) => setPercentualMax(e.target.value)}
-            placeholder="% máx."
-            className="border rounded px-3 py-2 w-full sm:w-28"
-          />
-          <button
-            onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }}
-            className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
-          >
-            Filtrar
-          </button>
-        </div>
-
-        {/* Total + Ordenação */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
-          <span>{total} registros encontrados</span>
-
-          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-            <span className="sm:mr-2">Ordenação</span>
-
+        <div className={`${painelAberto ? 'block' : 'hidden'} sm:block space-y-4 p-4`}>
+          {/* Filtro de texto */}
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <select
-              value={campoOrdenacao}
-              onChange={(e) => setCampoOrdenacao(e.target.value)}
+              value={campoNovoFiltro}
+              onChange={(e) => setCampoNovoFiltro(e.target.value)}
               className="border rounded px-3 py-2"
             >
-              {OPCOES_ORDENACAO.map((opcao) => (
-                <option key={opcao.value} value={opcao.value}>{opcao.label}</option>
+              {OPCOES_FILTRO_CAMPO.map((op) => (
+                <option key={op.value} value={op.value}>{op.label}</option>
               ))}
             </select>
 
-            <select
-              value={ordenacao}
-              onChange={(e) => setOrdenacao(e.target.value)}
-              className="border rounded px-3 py-2"
+            <input
+              value={valorNovoFiltro}
+              onChange={(e) => setValorNovoFiltro(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && adicionarFiltro()}
+              placeholder="Valor do filtro..."
+              className="border rounded px-3 py-2 flex-1 min-w-0"
+            />
+
+            <button
+              onClick={adicionarFiltro}
+              className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
             >
-              <option value="desc">Decrescente</option>
-              <option value="asc">Crescente</option>
-            </select>
+              Adicionar Filtro
+            </button>
+          </div>
+
+          {/* Badges */}
+          {Object.keys(filtrosAtivos).length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {(Object.entries(filtrosAtivos) as [keyof FiltrosAtivos, string][]).map(([campo, valor]) => (
+                <span
+                  key={campo}
+                  className="bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 flex items-center gap-2"
+                >
+                  {rotuloCampo(campo)}: {valor}
+                  <button
+                    onClick={() => removerFiltro(campo)}
+                    className="cursor-pointer font-bold hover:text-blue-900"
+                    aria-label={`Remover filtro de ${campo}`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Percentual + Ordenação/Por página */}
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              {/* Percentual de execução */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <span className="text-sm">Execução</span>
+                <input
+                  type="number"
+                  value={percentualMin}
+                  onChange={(e) => setPercentualMin(e.target.value)}
+                  placeholder="% mín."
+                  className="border rounded px-3 py-2 w-full sm:w-24"
+                />
+                <input
+                  type="number"
+                  value={percentualMax}
+                  onChange={(e) => setPercentualMax(e.target.value)}
+                  placeholder="% máx."
+                  className="border rounded px-3 py-2 w-full sm:w-24"
+                />
+                <button
+                  onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }}
+                  className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
+                >
+                  Filtrar
+                </button>
+              </div>
+
+              {/* Por página */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <span className="text-sm">Por página</span>
+                <input
+                  type="number"
+                  value={itensPorPagina}
+                  onChange={(e) => { setItensPorPagina(Number(e.target.value) || 15); setPagina(1); }}
+                  className="border rounded px-3 py-2 w-full sm:w-20"
+                />
+              </div>
+            </div>
+
+            {/* Ordenação */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:ml-auto">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                <span className="text-sm">Ordenar por</span>
+                <select
+                  value={campoOrdenacao}
+                  onChange={(e) => setCampoOrdenacao(e.target.value)}
+                  className="border rounded px-3 py-2"
+                >
+                  {OPCOES_ORDENACAO.map((op) => (
+                    <option key={op.value} value={op.value}>{op.label}</option>
+                  ))}
+                </select>
+
+                <select
+                  value={ordenacao}
+                  onChange={(e) => setOrdenacao(e.target.value)}
+                  className="border rounded px-3 py-2"
+                >
+                  <option value="desc">Decrescente</option>
+                  <option value="asc">Crescente</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
+      
+      {/* Total de registros */}
+      <span>{total} registros encontrados</span>
 
       {/* Tabela de orçamentos */}
       <Table<Orcamento> dados={orcamentos} chave={(o) => o.id} onRowClick={(o) => navigate(`/orcamentos/${o.id}`)}

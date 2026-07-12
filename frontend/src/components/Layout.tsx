@@ -19,7 +19,7 @@ export default function Layout() {
         <span className="font-bold text-lg">Execução Orçamentária</span>
         
         <nav className="hidden sm:flex items-center gap-4">
-          <Link to="/" className="hover:underline">Dashboard</Link>
+          <Link to="/" className="hover:underline">Início</Link>
           <Link to="/orcamentos" className="hover:underline">Orçamentos</Link>
 
           {token && (
