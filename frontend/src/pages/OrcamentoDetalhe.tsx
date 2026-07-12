@@ -64,15 +64,27 @@ export default function OrcamentoDetalhe() {
       {/* Cabeçalho */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
-          <p className="text-xs font-medium text-indigo-600 uppercase tracking-wide mb-1">
-            Orçamento #{orcamento.id}
-          </p>
-          <h1 className="text-2xl font-semibold text-zinc-900">
-            {orcamento.acao?.nome ?? 'Sem ação vinculada'}
-          </h1>
-          <p className="text-sm text-zinc-500 mt-1">
-            {orcamento.unidade_gestora?.orgao?.sigla ?? 'Informação não disponível'} · Ano {orcamento.ano}
-          </p>
+          <div>
+            <p className="text-xs font-medium text-indigo-600 uppercase tracking-wide mb-1">
+              Orçamento #{orcamento.id}
+            </p>
+            <h1 className="text-2xl font-semibold text-zinc-900">
+              {orcamento.acao?.nome ?? 'Sem ação vinculada'}
+            </h1>
+            <p className="text-sm text-zinc-500 mt-1">
+              {orcamento.unidade_gestora?.orgao?.sigla ?? 'Informação não disponível'} · Ano {orcamento.ano}
+            </p>
+
+            {orcamento.alerta && (
+              <div className="flex items-center gap-2 bg-red-50 border border-red-300 text-red-800 rounded-lg px-3 py-2 text-sm mt-3">
+                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                </svg>
+                <span>{orcamento.alerta}</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {percentual !== null && (
