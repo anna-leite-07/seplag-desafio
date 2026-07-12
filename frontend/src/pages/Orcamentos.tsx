@@ -127,33 +127,31 @@ export default function Orcamentos() {
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;
 
   return (
-
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Orçamentos</h1>
-
+    <div className="max-w-7xl mx-auto p-4 sm:p-6">
+      <h1 className="text-2xl font-semibold text-zinc-900 mb-6">Orçamentos</h1>
 
       {/* Painel de Filtros */}
-      <div className="bg-blue-50 mb-4">
+      <div className="bg-white border border-zinc-200 rounded-b-xl shadow-sm mb-4 overflow-hidden">
         {/* Título toggle */}
         <button
           onClick={() => setPainelAberto(!painelAberto)}
-          className="sm:hidden w-full flex items-center justify-between gap-1 bg-blue-300 text-blue-900 font-medium cursor-pointer px-4 py-2"
+          className="sm:hidden w-full flex items-center justify-between gap-1 bg-zinc-50 text-zinc-900 font-medium cursor-pointer px-4 py-3 border-b border-zinc-200"
         >
           Filtros
-          <span className={`transition-transform ${painelAberto ? 'rotate-180' : ''}`}>▾</span>
+          <span className={`transition-transform text-zinc-400 ${painelAberto ? 'rotate-180' : ''}`}>▾</span>
         </button>
 
-        <div className="hidden sm:block w-full bg-blue-300 text-blue-900 font-medium px-4 py-2">
+        <div className="hidden sm:block w-full bg-blue-300 text-zinc-900 text-sm font-semibold uppercase tracking-wide px-4 py-3 border-b border-zinc-200">
           Filtros
         </div>
 
-        <div className={`${painelAberto ? 'block' : 'hidden'} sm:block space-y-4 p-4`}>
+        <div className={`${painelAberto ? 'block' : 'hidden'} sm:block space-y-4 p-4 sm:p-5`}>
           {/* Filtro de texto */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
             <select
               value={campoNovoFiltro}
               onChange={(e) => setCampoNovoFiltro(e.target.value)}
-              className="border rounded px-3 py-2"
+              className="border border-zinc-400 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
             >
               {OPCOES_FILTRO_CAMPO.map((op) => (
                 <option key={op.value} value={op.value}>{op.label}</option>
@@ -165,12 +163,12 @@ export default function Orcamentos() {
               onChange={(e) => setValorNovoFiltro(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && adicionarFiltro()}
               placeholder="Valor do filtro..."
-              className="border rounded px-3 py-2 flex-1 min-w-0"
+              className="border border-zinc-400 rounded-lg px-3 py-2 text-sm flex-1 min-w-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
             />
 
             <button
               onClick={adicionarFiltro}
-              className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition-colors"
             >
               Adicionar Filtro
             </button>
@@ -182,12 +180,12 @@ export default function Orcamentos() {
               {(Object.entries(filtrosAtivos) as [keyof FiltrosAtivos, string][]).map(([campo, valor]) => (
                 <span
                   key={campo}
-                  className="bg-blue-100 text-blue-800 text-sm rounded-full px-3 py-1 flex items-center gap-2"
+                  className="bg-indigo-50 text-indigo-700 text-sm rounded-full px-3 py-1 flex items-center gap-2 border border-indigo-100"
                 >
                   {rotuloCampo(campo)}: {valor}
                   <button
                     onClick={() => removerFiltro(campo)}
-                    className="cursor-pointer font-bold hover:text-blue-900"
+                    className="cursor-pointer font-bold hover:text-indigo-900"
                     aria-label={`Remover filtro de ${campo}`}
                   >
                     ×
@@ -198,28 +196,28 @@ export default function Orcamentos() {
           )}
 
           {/* Percentual + Ordenação/Por página */}
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-3">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 pt-2 border-t border-zinc-100">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 pt-3 lg:pt-0">
               {/* Percentual de execução */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <span className="text-sm">Execução</span>
+                <span className="text-sm text-zinc-800">Execução</span>
                 <input
                   type="number"
                   value={percentualMin}
                   onChange={(e) => setPercentualMin(e.target.value)}
                   placeholder="% mín."
-                  className="border rounded px-3 py-2 w-full sm:w-24"
+                  className="border border-zinc-400 rounded-lg px-3 py-2 text-sm w-full sm:w-24 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                 />
                 <input
                   type="number"
                   value={percentualMax}
                   onChange={(e) => setPercentualMax(e.target.value)}
                   placeholder="% máx."
-                  className="border rounded px-3 py-2 w-full sm:w-24"
+                  className="border border-zinc-400 rounded-lg px-3 py-2 text-sm w-full sm:w-24 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                 />
                 <button
                   onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }}
-                  className="bg-blue-600 text-white rounded px-4 py-2 cursor-pointer"
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition-colors"
                 >
                   Filtrar
                 </button>
@@ -227,12 +225,12 @@ export default function Orcamentos() {
 
               {/* Por página */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <span className="text-sm">Por página</span>
+                <span className="text-sm text-zinc-800">Por página</span>
                 <input
                   type="number"
                   value={itensPorPagina}
                   onChange={(e) => { setItensPorPagina(Number(e.target.value) || 15); setPagina(1); }}
-                  className="border rounded px-3 py-2 w-full sm:w-20"
+                  className="border border-zinc-400 rounded-lg px-3 py-2 text-sm w-full sm:w-20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                 />
               </div>
             </div>
@@ -240,11 +238,11 @@ export default function Orcamentos() {
             {/* Ordenação */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:ml-auto">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <span className="text-sm">Ordenar por</span>
+                <span className="text-sm text-zinc-800">Ordenar por</span>
                 <select
                   value={campoOrdenacao}
                   onChange={(e) => setCampoOrdenacao(e.target.value)}
-                  className="border rounded px-3 py-2"
+                  className="border border-zinc-400 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                 >
                   {OPCOES_ORDENACAO.map((op) => (
                     <option key={op.value} value={op.value}>{op.label}</option>
@@ -254,7 +252,7 @@ export default function Orcamentos() {
                 <select
                   value={ordenacao}
                   onChange={(e) => setOrdenacao(e.target.value)}
-                  className="border rounded px-3 py-2"
+                  className="border border-zinc-400 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                 >
                   <option value="desc">Decrescente</option>
                   <option value="asc">Crescente</option>
@@ -264,54 +262,71 @@ export default function Orcamentos() {
           </div>
         </div>
       </div>
-      
+
       {/* Total de registros */}
-      <span>{total} registros encontrados</span>
+      <p className="text-sm text-zinc-580 mb-3">{total} registros encontrados</p>
 
       {/* Tabela de orçamentos */}
-      <Table<Orcamento> dados={orcamentos} chave={(o) => o.id} onRowClick={(o) => navigate(`/orcamentos/${o.id}`)}
-        tituloLinha={(o) => o.alerta ?? undefined} classeLinha={(o) => (o.situacao && o.situacao !== 'ok' ? 'bg-red-300' : '')}
-        colunas={[
-          { cabecalho: 'ID', render: (o) => o.id },
-          { cabecalho: 'Ano', render: (o) => o.ano },
-          { cabecalho: 'Órgão', render: (o) => o.unidade_gestora?.orgao.sigla },
-          { cabecalho: 'Programa', render: (o) => o.acao?.programa.nome },
-          { cabecalho: 'Ação', render: (o) => o.acao?.nome },
-          {
-            cabecalho: 'Dotação Atual', alinhamento: 'right',
-            render: (o) => formatarMoeda(Number(o.dotacao_atualizada ?? o.dotacao_inicial)),
-          },
-          {
-            cabecalho: 'Empenhado', alinhamento: 'right',
-            render: (o) => formatarMoeda(Number(o.valor_empenhado)),
-          },
-          {
-            cabecalho: 'Liquidado', alinhamento: 'right',
-            render: (o) => formatarMoeda(Number(o.valor_liquidado)),
-          },
-          {
-            cabecalho: 'Pago', alinhamento: 'right',
-            render: (o) => formatarMoeda(Number(o.valor_pago)),
-          },
-          {
-            cabecalho: '% Execução', alinhamento: 'right',
-            render: (o) =>
-              o.percentual_execucao != null
-                ? `${o.percentual_execucao}%` : 'Informação não disponível',
-          },
-        ]}
-      />
-
-
-      {/* Navegação de páginas */}
-      <div className="flex justify-between mt-5">
-        <button disabled={pagina === 1} onClick={() => setPagina(pagina - 1)} className={`cursor-pointer ${pagina === 1 ? 'invisible' : ''}`}>← Anterior</button>
-        <span>Página {pagina} de {ultimaPagina}</span>
-        <button disabled={pagina === ultimaPagina} onClick={() => setPagina(pagina + 1)} className={`cursor-pointer ${pagina === ultimaPagina ? 'invisible' : ''}`}>Próxima →</button>
+      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+        <Table<Orcamento> dados={orcamentos} chave={(o) => o.id} onRowClick={(o) => navigate(`/orcamentos/${o.id}`)}
+          tituloLinha={(o) => o.alerta ?? undefined} classeLinha={(o) => (o.situacao && o.situacao !== 'ok' ? 'bg-red-200' : '')}
+          colunas={[
+            { cabecalho: 'ID', render: (o) => o.id },
+            { cabecalho: 'Ano', render: (o) => o.ano },
+            { cabecalho: 'Órgão', render: (o) => o.unidade_gestora?.orgao.sigla },
+            { cabecalho: 'Programa', render: (o) => o.acao?.programa.nome },
+            { cabecalho: 'Ação', render: (o) => o.acao?.nome },
+            {
+              cabecalho: 'Dotação Atual', alinhamento: 'center',
+              render: (o) => formatarMoeda(Number(o.dotacao_atualizada ?? o.dotacao_inicial)),
+            },
+            {
+              cabecalho: 'Empenhado', alinhamento: 'center',
+              render: (o) => formatarMoeda(Number(o.valor_empenhado)),
+            },
+            {
+              cabecalho: 'Liquidado', alinhamento: 'center',
+              render: (o) => formatarMoeda(Number(o.valor_liquidado)),
+            },
+            {
+              cabecalho: 'Pago', alinhamento: 'center',
+              render: (o) => formatarMoeda(Number(o.valor_pago)),
+            },
+            {
+              cabecalho: 'Execução', alinhamento: 'center',
+              render: (o) => (
+                o.percentual_execucao != null ? (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                    {o.percentual_execucao}%
+                  </span>
+                ) : (
+                  <span className="text-zinc-400">Informação não disponível</span>
+                )
+              ),
+            },
+          ]}
+        />
       </div>
 
+      {/* Navegação de páginas */}
+      <div className="flex justify-between items-center mt-5 text-sm">
+        <button
+          disabled={pagina === 1}
+          onClick={() => setPagina(pagina - 1)}
+          className={`cursor-pointer text-zinc-600 hover:text-indigo-600 transition-colors ${pagina === 1 ? 'invisible' : ''}`}
+        >
+          ← Anterior
+        </button>
+        <span className="text-zinc-500">Página {pagina} de {ultimaPagina}</span>
+        <button
+          disabled={pagina === ultimaPagina}
+          onClick={() => setPagina(pagina + 1)}
+          className={`cursor-pointer text-zinc-600 hover:text-indigo-600 transition-colors ${pagina === ultimaPagina ? 'invisible' : ''}`}
+        >
+          Próxima →
+        </button>
+      </div>
     </div>
-
   );
 
 }

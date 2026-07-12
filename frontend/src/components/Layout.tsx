@@ -15,25 +15,21 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="bg-blue-600 text-white px-6 py-4 flex items-center justify-between relative">
-        <span className="font-bold text-lg">Execução Orçamentária</span>
-        
-        <nav className="hidden sm:flex items-center gap-4">
-          <Link to="/" className="hover:underline">Início</Link>
-          <Link to="/orcamentos" className="hover:underline">Orçamentos</Link>
+      <header className="bg-indigo-600 border-b border-indigo-700 px-6 py-4 flex items-center justify-between relative sticky top-0 z-20">
+        <span className="font-bold text-lg text-white">Execução Orçamentária</span>
+
+        <nav className="hidden sm:flex items-center gap-6 text-sm">
+          <Link to="/" className="text-indigo-100 hover:text-white transition-colors">Dashboard</Link>
+          <Link to="/orcamentos" className="text-indigo-100 hover:text-white transition-colors">Orçamentos</Link>
 
           {token && (
-            <button onClick={handleLogout} className="bg-blue-700 hover:bg-blue-800 rounded px-3 py-1 text-sm cursor-pointer">
+            <button onClick={handleLogout} className="bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg px-4 py-2 text-sm cursor-pointer transition-colors">
               Sair
             </button>
           )}
         </nav>
 
-        {/* Botão hambúrguer mobile */}
-        <button
-          onClick={() => setMenuAberto(!menuAberto)}
-          className="sm:hidden cursor-pointer" aria-label="Abrir menu"
-        >
+        <button onClick={() => setMenuAberto(!menuAberto)} className="sm:hidden text-white cursor-pointer" aria-label="Abrir menu">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuAberto ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -43,21 +39,13 @@ export default function Layout() {
           </svg>
         </button>
 
-        {/* Menu suspenso mobile */}
         {menuAberto && (
-          <nav className="sm:hidden absolute top-full left-0 w-full bg-blue-600 flex flex-col items-start px-6 py-4 gap-3 shadow-lg z-10">
-            <Link to="/" onClick={() => setMenuAberto(false)} className="hover:underline">
-              Início
-            </Link>
-            <Link to="/orcamentos" onClick={() => setMenuAberto(false)} className="hover:underline">
-              Orçamentos
-            </Link>
+          <nav className="sm:hidden absolute top-full left-0 w-full bg-indigo-600 border-b border-indigo-700 flex flex-col items-start px-6 py-4 gap-3 shadow-lg z-10">
+            <Link to="/" onClick={() => setMenuAberto(false)} className="text-indigo-100 hover:text-white">Início</Link>
+            <Link to="/orcamentos" onClick={() => setMenuAberto(false)} className="text-indigo-100 hover:text-white">Orçamentos</Link>
 
             {token && (
-              <button
-                onClick={handleLogout}
-                className="bg-blue-700 hover:bg-blue-800 rounded px-3 py-1 text-sm w-full text-left cursor-pointer"
-              >
+              <button onClick={handleLogout} className="bg-indigo-700 hover:bg-indigo-800 text-white rounded-lg px-4 py-2 text-sm w-full text-left cursor-pointer">
                 Sair
               </button>
             )}
