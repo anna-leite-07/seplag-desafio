@@ -34,6 +34,7 @@ export default function Orcamentos() {
   const [percentualMin, setPercentualMin] = useState('');
   const [percentualMax, setPercentualMax] = useState('');
   const [itensPorPagina, setItensPorPagina] = useState(15);
+  const [itensPorPaginaInput, setItensPorPaginaInput] = useState('15'); // valor sendo digitado
 
   // Estados
   const [carregando, setCarregando] = useState(true);
@@ -123,6 +124,12 @@ export default function Orcamentos() {
 
   useEffect(() => { buscar(); }, [pagina, ordenacao, campoOrdenacao, itensPorPagina, gatilhoBusca]);
 
+  function aplicarFiltroExecucaoEPaginacao() {
+    setItensPorPagina(Number(itensPorPaginaInput) || 15);
+    setPagina(1);
+    setGatilhoBusca((g) => g + 1);
+  }
+  
   if (carregando) return <div className="p-6">Carregando...</div>;
   if (erro) return <div className="p-6 text-red-600">{erro}</div>;
 
@@ -215,12 +222,6 @@ export default function Orcamentos() {
                   placeholder="% máx."
                   className="border border-zinc-400 rounded-lg px-3 py-2 text-sm w-full sm:w-24 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                 />
-                <button
-                  onClick={() => { setPagina(1); setGatilhoBusca((g) => g + 1); }}
-                  className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition-colors"
-                >
-                  Filtrar
-                </button>
               </div>
 
               {/* Por página */}
@@ -228,10 +229,20 @@ export default function Orcamentos() {
                 <span className="text-sm text-zinc-800">Por página</span>
                 <input
                   type="number"
-                  value={itensPorPagina}
-                  onChange={(e) => { setItensPorPagina(Number(e.target.value) || 15); setPagina(1); }}
+                  value={itensPorPaginaInput}
+                  onChange={(e) => setItensPorPaginaInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && aplicarFiltroExecucaoEPaginacao()}
                   className="border border-zinc-400 rounded-lg px-3 py-2 text-sm w-full sm:w-20 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-shadow"
                 />
+              </div>
+
+              <div>
+                <button
+                  onClick={aplicarFiltroExecucaoEPaginacao}
+                  className="bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition-colors"
+                >
+                  Filtrar
+                </button>
               </div>
             </div>
 
