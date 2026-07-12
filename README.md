@@ -120,6 +120,7 @@ src/
 - Consulta de órgãos com filtros e paginação.
 - Consulta de contratos com filtros.
 - Consulta de orçamentos com filtros, paginação e detalhamento.
+- Filtros múltiplos.
 - Registro de revisões em orçamentos autenticados.
 - Gráficos com dados agregados para apoio à análise.
 - Ambiente inicializado automaticamente com migrations, seeders e factories.
@@ -162,6 +163,7 @@ Campos ausentes ou nulos (ex.: quando um orçamento não possui contratos vincul
 - Refatoração dos controllers para usar **API Resources** do Laravel, em vez de `select()`/`with()` diretamente nas queries — mais alinhado ao padrão de mercado para formatação de resposta JSON.
 - Exportação de dados em PDF/Excel.
 - Telas dedicadas para Órgãos e Contratos, com filtros próprios explorando os endpoints já existentes.
+- Retorno de páginas para reconhecer filtros anteriores.
 - Modo escuro.
 
 ## Uso de Inteligência Artificial
